@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - "8000:8080"
+        environment:
+            DATABASE_URL: jdbc:postgresql://db:5432/zoo
+            DATABASE_USERNAME: root
+            DATABASE_PASSWORD: root
+            DATABASE_DRIVER_CLASS_NAME: org.postgresql.Driver
+        depends_on:
+            - db
+        networks:
+            - app_network
+
+    react-app:
+        build:
+            context: ./front
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./front:/app
+        environment:
+            CHOKIDAR_USEPOLLING: "true"
+        networks:
+            - app_network
+
+    db:
+        image: postgres:16.8-alpine3.20
+        container_name: postgres
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+            POSTGRES_DB: zoo
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./db:/var/lib/postgresql/data
+        networks:
+            - app_network
+
+networks:
+    app_network:
+        driver: bridge

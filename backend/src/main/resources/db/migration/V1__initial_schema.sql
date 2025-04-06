@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS public.animal (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    species VARCHAR(50) NOT NULL,
+    birth_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
